@@ -1,9 +1,11 @@
 'use strict';
+const Comparator = require('./comparator/Comparator');
+const Storage = require('./storage/Storage');
 
 class CompareEngine {
     constructor (comparator, storage) {
-        if ( !storage ) throw new Error('compare engine storage required');
-        if ( !comparator ) throw new Error('compare engine comparator required');
+        if ( !comparator || !(comparator instanceof Comparator)) throw new Error('compare engine comparator required');
+        if ( !storage || !(storage instanceof Storage)) throw new Error('compare engine storage required');
 
         this.comparator = comparator;
         this.storage = storage;
