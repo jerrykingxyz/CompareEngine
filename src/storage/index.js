@@ -1,6 +1,7 @@
+const Storage = require('./Storage');
 const CacheStorage = require('./CacheStorage');
 const FileStorage = require('./FileStorage');
 
 module.exports = {
-    CacheStorage, FileStorage
+    Storage, CacheStorage, FileStorage
 };

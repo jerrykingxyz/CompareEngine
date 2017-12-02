@@ -1,5 +1,6 @@
+const Comparator = require('./Comparator');
 const ArticleComparator = require('./ArticleComparator');
 
 module.exports = {
-    ArticleComparator
+    Comparator, ArticleComparator
 };
