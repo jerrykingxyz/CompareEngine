@@ -1,0 +1,26 @@
+{
+  "name": "compareengine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/CompareEngine.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "leven": "^2.1.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jerrykingxyz/CompareEngine.git"
+  },
+  "author": "jerrykingxyz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jerrykingxyz/CompareEngine/issues"
+  },
+  "homepage": "https://github.com/jerrykingxyz/CompareEngine#readme"
+}
