@@ -38,7 +38,7 @@ __--WARN: 比较算法不适合快速比较，所以不要用于大规模比较�
 
 __storage__
 * `CompareEngine.CacheStorage` (): 存储结果到内存
-* `CompareEngine.FileStorage` (__dirPath__): 存储结果到一个目录. __dirPath__ 是一个字符串, 如果__dirPath__ 不存在, 将使用`fs.mkdir()`来创建.
+* `CompareEngine.FileStorage` (__dirPath__): 存储结果到一个目录. __dirPath__ 是一个字符串, 如果 __dirPath__ 不存在, 将使用`fs.mkdir()`来创建.
 
 
 ## License
