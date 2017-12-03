@@ -16,7 +16,7 @@ class CompareEngine {
         let storage = this.storage;
 
         return (async function () {
-            let base = comparator.preprocess(input);
+            let base = await comparator.preprocess(input);
 
             let list = await storage.getAll();
 
@@ -28,8 +28,8 @@ class CompareEngine {
                 let needUpdate = await comparator.compare(baseKey, base, key, value);
                 if ( needUpdate ) await storage.setValue(key, value);
             }
-            await storage.setValue(baseKey, base);
             await comparator.postprocess(baseKey, base);
+            await storage.setValue(baseKey, base);
             return baseKey;
         })();
     }
