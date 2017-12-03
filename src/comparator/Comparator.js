@@ -1,5 +1,7 @@
 class Comparator {
-    preprocess (obj) {}
+    preprocess (obj) {
+        return obj;
+    }
     compare (key1, value1, key2, value2) {}
     postprocess (key, value) {}
 }
