@@ -1,11 +1,8 @@
 {
-  "name": "compareengine",
-  "version": "1.0.0",
-  "description": "",
+  "name": "compare-engine",
+  "version": "0.0.1",
+  "description": "a simple compare engine.",
   "main": "./src/CompareEngine.js",
-  "directories": {
-    "test": "test"
-  },
   "dependencies": {
     "crypto": "^1.0.1",
     "leven": "^2.1.0"
@@ -17,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/jerrykingxyz/CompareEngine.git"
   },
-  "author": "jerrykingxyz",
+  "author": "jinrui",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jerrykingxyz/CompareEngine/issues"
