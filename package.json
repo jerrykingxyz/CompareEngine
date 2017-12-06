@@ -1,6 +1,6 @@
 {
   "name": "compare-engine",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "a simple compare engine.",
   "main": "./src/CompareEngine.js",
   "dependencies": {
