@@ -12,13 +12,13 @@ class CompareEngine {
         this.queue = Promise.resolve();
     }
 
-    addInput (input) {
+    addInput (...input) {
         let comparator = this.comparator;
         let storage = this.storage;
         let queue = this.queue;
 
         return queue.then(async function () {
-            let base = await comparator.preprocess(input);
+            let base = await comparator.preprocess(...input);
 
             let list = await storage.getAll();
 
