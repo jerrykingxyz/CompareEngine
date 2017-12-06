@@ -3,13 +3,13 @@ const Comparator = require('./comparator/Comparator');
 const Storage = require('./storage/Storage');
 
 class CompareEngine {
-    constructor (comparator, storage, enabledQueue) {
+    constructor (comparator, storage) {
         if ( !comparator || !(comparator instanceof Comparator)) throw new Error('compare engine comparator required');
         if ( !storage || !(storage instanceof Storage)) throw new Error('compare engine storage required');
 
         this.comparator = comparator;
         this.storage = storage;
-        this.queue = enabledQueue ? Promise.resolve() : null;
+        this.queue = Promise.resolve();
     }
 
     addInput (input) {
@@ -17,7 +17,7 @@ class CompareEngine {
         let storage = this.storage;
         let queue = this.queue;
 
-        let task = (async function () {
+        return queue.then(async function () {
             let base = await comparator.preprocess(input);
 
             let list = await storage.getAll();
@@ -33,12 +33,7 @@ class CompareEngine {
             await comparator.postprocess(baseKey, base);
             await storage.setValue(baseKey, base);
             return baseKey;
-        })();
-
-        if (queue) {
-            return queue.then(()=>task);
-        }
-        return task;
+        });
     }
 }
 
