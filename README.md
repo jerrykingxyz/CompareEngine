@@ -20,7 +20,7 @@ __comparator__: ***instance*** extends `CompareEngine.Comparator`. if you want t
 __storage__: ***instance*** extends `CompareEngine.Storage`. key-value storage. if you want to define your storage, there are some method you need to override.
 * `getAll` () __Promise__
 * `getValue` (__key__) __Promise__
-* `setValue` (__key__, __value__)
+* `setValue` (__key__, __value__) __Promise__: if the __key__ is null, you need to insert the data. And the __Promise__ needs to return the key.
 
 there are some comparator and storage you can use.
 

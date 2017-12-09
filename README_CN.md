@@ -18,7 +18,7 @@ __comparator__: 一个继承`CompareEngine.Comparator`的实例。 如果你想�
 __storage__: 一个继承`CompareEngine.Storage`的实例. key-value模式的存储. 如果你想要自定义存储器你需要覆盖下面的方法。
 * `getAll` () __Promise__
 * `getValue` (__key__) __Promise__
-* `setValue` (__key__, __value__)
+* `setValue` (__key__, __value__) __Promise__: 如果 __key__ 为 null, 你需要将这条数据插入. 返回的 __Promise__ 对象需要返回更新的key.
 
 `CompareEngine` 包含了一些比较器和存储器
 
