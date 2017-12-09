@@ -53,7 +53,7 @@ class FileStorage extends Storage {
         return new Promise(function (resolve, reject) {
             fs.writeFile(path.join(dirPath, key), JSON.stringify(value), function (err) {
                 if (err) reject(err);
-                else resolve(key, value);
+                else resolve(key);
             })
         })
     }
