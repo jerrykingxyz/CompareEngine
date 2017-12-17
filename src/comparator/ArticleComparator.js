@@ -25,6 +25,7 @@ class ArticleComparator extends Comparator {
             chunk
         }
     }
+
     compare (key1, value1, key2, value2) {
         // get same chunk
         let similar_info1 = {};
@@ -60,8 +61,7 @@ class ArticleComparator extends Comparator {
         }
         return false;
     }
-    postprocess (key, value) {
-    }
+
 }
 
 module.exports = ArticleComparator;
