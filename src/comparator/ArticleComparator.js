@@ -4,6 +4,7 @@ const util = require('../utils/util');
 class ArticleComparator extends Comparator {
     constructor (config) {
         super();
+        this.leven = require('leven');
         this.config = Object.assign({
             split: /[，。,\.\n]/, ///(?![a-zA-Z0-9])[，。,\.\n](?![a-zA-Z0-9])/,
             chunkMinLength: 5,
@@ -34,7 +35,7 @@ class ArticleComparator extends Comparator {
             let chunks1 = value1.chunk[i];
             for (let j = 0; j < value2.chunk.length; j ++) {
                 let chunks2 = value2.chunk[j];
-                if ( util.checkSimilarity(chunks1, chunks2, this.config.threshold) ) {
+                if ( this.checkSimilarity(chunks1, chunks2, this.config.threshold) ) {
                     if (!similar_info1[i]) {
                         similar_info1[i] = j;
                     }
@@ -60,6 +61,19 @@ class ArticleComparator extends Comparator {
             return true;
         }
         return false;
+    }
+
+    checkSimilarity (a, b, threshold) {
+
+        if (threshold === 1) {
+            return a === b;
+        }
+
+        const d = this.leven(a.toLowerCase(), b.toLowerCase());
+
+        const longest = Math.max(a.length, b.length);
+
+        return (longest - d) / longest >= threshold;
     }
 
 }
