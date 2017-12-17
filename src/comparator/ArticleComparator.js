@@ -1,5 +1,4 @@
 const Comparator = require('./Comparator');
-const util = require('../utils/util');
 
 class ArticleComparator extends Comparator {
     constructor (config) {
