@@ -18,18 +18,46 @@ class CompareEngine {
         let queue = this.queue;
 
         return queue.then(async function () {
+            let baseKey = null;
             let base = await comparator.preprocess(...input);
+
+            let keyName = await storage.getKeyName();
+            if (keyName && base[keyName]) {
+                baseKey = base[keyName];
+            } else {
+                baseKey = await storage.setValue(null, base);
+            }
 
             let list = await storage.getAll();
 
-            let baseKey = await storage.setValue(null, base);
+            if (list instanceof Array) {
+                for ( let item of list ) {
+                    let key, value;
 
-            for (let i = 0; i < list.length; i++) {
-                let key = list[i];
-                let value = await storage.getValue(key);
-                let needUpdate = await comparator.compare(baseKey, base, key, value);
-                if ( needUpdate ) await storage.setValue(key, value);
+                    if (typeof item === 'string') {
+                        key = item;
+                        value = await storage.getValue(key);
+                    } else if (keyName && item[keyName]) {
+                        key = item[keyName];
+                        value = item;
+                    } else {
+                        continue;
+                    }
+
+                    if (key === baseKey) continue;
+                    let needUpdate = await comparator.compare(baseKey, base, key, value);
+                    if ( needUpdate ) await storage.setValue(key, value);
+                }
+            } else if (typeof list === 'object') {
+                for (let key in list) {
+                    let value = list[key];
+
+                    if (key === baseKey) continue;
+                    let needUpdate = await comparator.compare(baseKey, base, key, value);
+                    if ( needUpdate ) await storage.setValue(key, value);
+                }
             }
+
             await comparator.postprocess(baseKey, base);
             await storage.setValue(baseKey, base);
             return baseKey;

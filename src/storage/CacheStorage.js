@@ -7,10 +7,10 @@ class CacheStorage extends Storage {
         this.maxIndex = 0;
     }
     getAll () {
-        return Promise.resolve(Object.getOwnPropertyNames(this.data));
+        return this.data;
     }
     getValue (key) {
-        return Promise.resolve(this.data[key]);
+        return this.data[key];
     }
     setValue (key, value) {
         if ( !key ) {
@@ -19,7 +19,7 @@ class CacheStorage extends Storage {
         }
 
         this.data[key] = value;
-        return Promise.resolve(key);
+        return key;
     }
 }
 

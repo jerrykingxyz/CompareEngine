@@ -1,6 +1,8 @@
 class Storage {
+    getKeyName() {
+    }
     getAll () {
-        return Promise.resolve([])
+        return [];
     }
     getValue (key) {}
     setValue (key, value) {}
