@@ -1,9 +1,6 @@
 class Storage {
-    getKeyName() {
-    }
-    getAll () {
-        return [];
-    }
+    getKeyName() {}
+    getAll () {}
     getValue (key) {}
     setValue (key, value) {}
 }
