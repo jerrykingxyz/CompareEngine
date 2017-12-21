@@ -1,8 +1,10 @@
 'use strict';
+
 const Comparator = require('./comparator/Comparator');
 const Storage = require('./storage/Storage');
 
 class CompareEngine {
+
     constructor (comparator, storage) {
         if ( !comparator || !(comparator instanceof Comparator)) throw new Error('compare engine comparator required');
         if ( !storage || !(storage instanceof Storage)) throw new Error('compare engine storage required');
@@ -13,15 +15,14 @@ class CompareEngine {
     }
 
     addInput (...input) {
-        let comparator = this.comparator;
-        let storage = this.storage;
-        let queue = this.queue;
+        const comparator = this.comparator;
+        const storage = this.storage;
 
-        return queue.then(async function () {
+        return this.queue.then(async function () {
             let baseKey = null;
             let base = await comparator.preprocess(...input);
 
-            let keyName = await storage.getKeyName();
+            const keyName = await storage.getKeyName();
             if (keyName && base[keyName]) {
                 baseKey = base[keyName];
             } else {
@@ -45,7 +46,7 @@ class CompareEngine {
                     }
 
                     if (key === baseKey) continue;
-                    let needUpdate = await comparator.compare(baseKey, base, key, value);
+                    const needUpdate = await comparator.compare(baseKey, base, key, value);
                     if ( needUpdate ) await storage.setValue(key, value);
                 }
             } else if (typeof list === 'object') {
@@ -53,7 +54,7 @@ class CompareEngine {
                     let value = list[key];
 
                     if (key === baseKey) continue;
-                    let needUpdate = await comparator.compare(baseKey, base, key, value);
+                    const needUpdate = await comparator.compare(baseKey, base, key, value);
                     if ( needUpdate ) await storage.setValue(key, value);
                 }
             }
@@ -61,6 +62,20 @@ class CompareEngine {
             await comparator.postprocess(baseKey, base);
             await storage.setValue(baseKey, base);
             return baseKey;
+        });
+    }
+
+    /**
+     * When the engine input is complete, you can call this method to notify the comparator and storage
+     * @return {Promise<*>}
+     */
+    finalize () {
+        const comparator = this.comparator;
+        const storage = this.storage;
+
+        return this.queue.then(async function () {
+            comparator.finalize();
+            storage.finalize();
         });
     }
 }
