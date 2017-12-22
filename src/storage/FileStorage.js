@@ -6,13 +6,20 @@ const Storage = require('./Storage');
 const util = require('../utils/util');
 
 class FileStorage extends Storage {
-    constructor (dirPath) {
+
+    constructor (dirPath, enableCache = true) {
         super();
         if (typeof dirPath !== 'string') throw new Error('File Storage path must a string');
         this.dirPath = dirPath;
+        this.enableCache = enableCache;
+
+        this.dirtyIndex = [];
+        this.cache = null;
     }
-    getAll () {
+
+    readdir () {
         const dirPath = this.dirPath;
+
         return new Promise(function (resolve, reject) {
             fs.exists(dirPath, function (exists) {
                 resolve(exists);
@@ -33,9 +40,10 @@ class FileStorage extends Storage {
                     else resolve(data);
                 })
             })
-        });
+        })
     }
-    getValue (key) {
+
+    readFile (key) {
         const dirPath = this.dirPath;
         return new Promise(function (resolve, reject) {
             fs.readFile(path.join(dirPath, key), function (err, data) {
@@ -44,11 +52,9 @@ class FileStorage extends Storage {
             })
         })
     }
-    setValue (key, value) {
+
+    writeFile (key, value) {
         const dirPath = this.dirPath;
-        if (!key) {
-            key = Date.now() + util.md5(JSON.stringify(value));
-        }
 
         return new Promise(function (resolve, reject) {
             fs.writeFile(path.join(dirPath, key), JSON.stringify(value), function (err) {
@@ -56,6 +62,52 @@ class FileStorage extends Storage {
                 else resolve(key);
             })
         })
+    }
+
+    async getAll () {
+        if (!this.enableCache) {
+            return this.readdir();
+        }
+        if (!this.cache) {
+            const list = await this.readdir();
+            let cache = {};
+            for(let item of list) {
+                cache[item] = null;
+            }
+            this.cache = cache;
+        }
+        return this.cache;
+    }
+
+    async getValue (key) {
+        if (!this.enableCache || !this.cache) {
+            return this.readFile(key)
+        }
+        if (this.cache[key] === null) {
+            this.cache[key] = await this.readFile(key);
+        }
+        return this.cache[key];
+    }
+
+    setValue (key, value) {
+        if (!key) {
+            // generate and return new key
+            return Date.now() + util.md5(JSON.stringify(value));
+        }
+
+        if (!this.enableCache || !this.cache) {
+            return this.writeFile(key, value);
+        }
+        this.cache[key] = value;
+        if (this.dirtyIndex.indexOf(key) === -1) this.dirtyIndex.push(key);
+    }
+
+    finalize () {
+        let needWrite = [];
+        for(let key of this.dirtyIndex) {
+            needWrite.push(this.writeFile(key, this.cache[key]))
+        }
+        return Promise.all(needWrite);
     }
 }
 

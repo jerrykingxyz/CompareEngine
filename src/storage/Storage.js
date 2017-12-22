@@ -25,7 +25,7 @@ class Storage {
     getValue (key) {}
 
     /**
-     * @param {string} key If the key is null, you need to insert the value and return the key
+     * @param {string} key If the key is null, you need to generate and return a new key.
      * @param {object} value
      * @return {(Promise<string> | string)}
      */

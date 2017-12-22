@@ -46,6 +46,7 @@ class CompareEngine {
                     }
 
                     if (key === baseKey) continue;
+
                     const needUpdate = await comparator.compare(baseKey, base, key, value);
                     if ( needUpdate ) await storage.setValue(key, value);
                 }
@@ -54,6 +55,8 @@ class CompareEngine {
                     let value = list[key];
 
                     if (key === baseKey) continue;
+                    if (value === null) value = await storage.getValue(key);
+
                     const needUpdate = await comparator.compare(baseKey, base, key, value);
                     if ( needUpdate ) await storage.setValue(key, value);
                 }
