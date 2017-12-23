@@ -7,7 +7,8 @@ class ArticleComparator extends Comparator {
         this.config = Object.assign({
             split: /[，。,\.\n]/, ///(?![a-zA-Z0-9])[，。,\.\n](?![a-zA-Z0-9])/,
             chunkMinLength: 5,
-            threshold: 1
+            threshold: 1,
+            saveToNth: 1
         }, config);
     }
 
@@ -20,8 +21,7 @@ class ArticleComparator extends Comparator {
         });
 
         return {
-            similarity_index: null,
-            similarity: null,
+            similar: [],
             chunk
         }
     }
@@ -48,30 +48,43 @@ class ArticleComparator extends Comparator {
         // computed similarity
         let similarity1 = Object.getOwnPropertyNames(similar_info1).length / value1.chunk.length;
         let similarity2 = Object.getOwnPropertyNames(similar_info2).length / value2.chunk.length;
-        if (!value1.similarity || similarity1 > value1.similarity) {
-            value1.similarity_index = key2;
-            value1.similarity = similarity1;
-            value1.similar_info = similar_info1;
+        this.updateSimilar(value1.similar, {
+            index: key2,
+            similarity: similarity1,
+            info: similar_info1
+        });
+
+        return this.updateSimilar(value2.similar, {
+            index: key1,
+            similarity: similarity2,
+            info: similar_info2
+        });
+    }
+
+    updateSimilar (similar, item) {
+        for (let i in similar) {
+            if (item.similarity > similar[i].similarity) {
+                similar.splice(i, 0, item);
+                if (similar.length > this.config.saveToNth) {
+                  similar.pop();
+                }
+                return true;
+            }
         }
-        if (!value2.similarity || similarity2 > value2.similarity) {
-            value2.similarity_index = key1;
-            value2.similarity = similarity2;
-            value2.similar_info = similar_info2;
+        if (similar.length < this.config.saveToNth) {
+            similar.push(item);
             return true;
         }
         return false;
     }
 
     checkSimilarity (a, b, threshold) {
-
         if (threshold === 1) {
             return a === b;
         }
 
         const d = this.leven(a.toLowerCase(), b.toLowerCase());
-
         const longest = Math.max(a.length, b.length);
-
         return (longest - d) / longest >= threshold;
     }
 

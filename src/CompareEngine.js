@@ -18,7 +18,7 @@ class CompareEngine {
         const comparator = this.comparator;
         const storage = this.storage;
 
-        return this.queue.then(async function () {
+        this.queue = this.queue.then(async function () {
             let baseKey = null;
             let base = await comparator.preprocess(...input);
 
@@ -66,6 +66,7 @@ class CompareEngine {
             await storage.setValue(baseKey, base);
             return baseKey;
         });
+        return this.queue;
     }
 
     /**
@@ -76,10 +77,11 @@ class CompareEngine {
         const comparator = this.comparator;
         const storage = this.storage;
 
-        return this.queue.then(async function () {
+        this.queue = this.queue.then(async function () {
             comparator.finalize();
             storage.finalize();
         });
+        return this.queue;
     }
 }
 

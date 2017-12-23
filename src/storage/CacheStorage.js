@@ -15,11 +15,10 @@ class CacheStorage extends Storage {
     setValue (key, value) {
         if ( !key ) {
             this.maxIndex ++;
-            key = this.maxIndex;
+            return String(this.maxIndex);
         }
 
         this.data[key] = value;
-        return key;
     }
 }
 
