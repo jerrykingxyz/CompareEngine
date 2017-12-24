@@ -29,7 +29,9 @@ there are some comparator and storage you can use.
         // chunk min length, default: 5
         chunkMinLength: 5,
         // threshold, default: 1
-        threshold: 1
+        threshold: 1,
+        // save n similar results, default: 1
+        saveToNth: 1
     };
     let articleComparator = new CompareEngine.ArticleComparator(config);
 ```

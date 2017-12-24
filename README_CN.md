@@ -27,7 +27,9 @@
         // 数据块最小大小, default: 5
         chunkMinLength: 5,
         // 阈值, default: 1
-        threshold: 1
+        threshold: 1,
+        // 保存n个最相似的结果, default: 1
+        saveToNth: 1
     }
     let articleComparator = new CompareEngine.ArticleComparator(config);
 ```
